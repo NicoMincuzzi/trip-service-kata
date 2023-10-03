@@ -1,5 +1,6 @@
 package org.craftedsw.tripservicekata.trip;
 
+import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
 import org.craftedsw.tripservicekata.user.UserSession;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,13 +13,14 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TripServiceTest {
 
     @BeforeAll
-    static void setup(){
+    static void setup() {
         Mockito.mockStatic(UserSession.class);
         Mockito.mockStatic(TripDAO.class);
     }
@@ -46,7 +48,6 @@ public class TripServiceTest {
         user.addFriend(new User());
         when(UserSession.getInstance()).thenReturn(userSession);
         when(userSession.getLoggedUser()).thenReturn(loggedUser);
-        when(TripDAO.findTripsByUser(user)).thenReturn(new ArrayList<>(Collections.singletonList(new Trip())));
 
         List<Trip> result = new TripService().getTripsByUser(user);
 
@@ -66,5 +67,15 @@ public class TripServiceTest {
         List<Trip> result = new TripService().getTripsByUser(user);
 
         assertThat(result.size(), equalTo(0));
+    }
+
+    @Test
+    void userNotLogged() {
+        UserSession userSession = mock(UserSession.class);
+        User user = new User();
+        when(UserSession.getInstance()).thenReturn(userSession);
+        when(userSession.getLoggedUser()).thenReturn(null);
+
+        assertThrows(UserNotLoggedInException.class, () -> new TripService().getTripsByUser(user));
     }
 }
