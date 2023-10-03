@@ -52,4 +52,19 @@ public class TripServiceTest {
 
         assertThat(result.size(), equalTo(0));
     }
+
+    @Test
+    void noTripsForUserWithoutTrips() {
+        UserSession userSession = mock(UserSession.class);
+        User loggedUser = new User();
+        User user = new User();
+        user.addFriend(loggedUser);
+        when(UserSession.getInstance()).thenReturn(userSession);
+        when(userSession.getLoggedUser()).thenReturn(loggedUser);
+        when(TripDAO.findTripsByUser(user)).thenReturn(new ArrayList<>());
+
+        List<Trip> result = new TripService().getTripsByUser(user);
+
+        assertThat(result.size(), equalTo(0));
+    }
 }
