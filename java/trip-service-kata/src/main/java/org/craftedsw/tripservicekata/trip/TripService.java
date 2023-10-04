@@ -14,19 +14,16 @@ public class TripService {
             throw new UserNotLoggedInException();
         }
 
+        if (isFriend(user)) {
+            return TripDAO.findTripsByUser(user);
+        }
+
+        return new ArrayList<>();
+    }
+
+    private static boolean isFriend(User user) {
         User loggedUser = UserSession.getInstance().getLoggedUser();
-        boolean isFriend = false;
-        List<Trip> tripList = new ArrayList<>();
-        for (User friend : user.getFriends()) {
-            if (friend.equals(loggedUser)) {
-                isFriend = true;
-                break;
-            }
-        }
-        if (isFriend) {
-            tripList = TripDAO.findTripsByUser(user);
-        }
-        return tripList;
+        return user.getFriends().stream().anyMatch(it -> it.equals(loggedUser));
     }
 
 }
