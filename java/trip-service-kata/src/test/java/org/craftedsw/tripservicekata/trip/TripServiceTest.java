@@ -33,6 +33,7 @@ public class TripServiceTest {
         user.addFriend(loggedUser);
         when(UserSession.getInstance()).thenReturn(userSession);
         when(userSession.getLoggedUser()).thenReturn(loggedUser);
+        when(userSession.isLogged()).thenReturn(true);
         when(TripDAO.findTripsByUser(user)).thenReturn(new ArrayList<>(Collections.singletonList(new Trip())));
 
         List<Trip> result = new TripService().getTripsByUser(user);
@@ -48,6 +49,7 @@ public class TripServiceTest {
         user.addFriend(new User());
         when(UserSession.getInstance()).thenReturn(userSession);
         when(userSession.getLoggedUser()).thenReturn(loggedUser);
+        when(userSession.isLogged()).thenReturn(true);
 
         List<Trip> result = new TripService().getTripsByUser(user);
 
@@ -62,6 +64,7 @@ public class TripServiceTest {
         user.addFriend(loggedUser);
         when(UserSession.getInstance()).thenReturn(userSession);
         when(userSession.getLoggedUser()).thenReturn(loggedUser);
+        when(userSession.isLogged()).thenReturn(true);
         when(TripDAO.findTripsByUser(user)).thenReturn(new ArrayList<>());
 
         List<Trip> result = new TripService().getTripsByUser(user);
@@ -74,7 +77,7 @@ public class TripServiceTest {
         UserSession userSession = mock(UserSession.class);
         User user = new User();
         when(UserSession.getInstance()).thenReturn(userSession);
-        when(userSession.getLoggedUser()).thenReturn(null);
+        when(userSession.isLogged()).thenReturn(false);
 
         assertThrows(UserNotLoggedInException.class, () -> new TripService().getTripsByUser(user));
     }
