@@ -24,7 +24,6 @@ public class TripServiceTest extends TripService {
         user.addTrip(TRIP);
         user.addTrip(TRIP);
         user.addFriend(REGISTERED_USER);
-
         loggedInUser = REGISTERED_USER;
 
         List<Trip> result = new TestableTripService().getTripsByUser(user);
@@ -34,13 +33,9 @@ public class TripServiceTest extends TripService {
 
     @Test
     public void whenTheUserIsLoggedInAndHasFriendThenCanSeeHisTrip() {
-        ANOTHER_USER.addTrip(new Trip());
         User user = new User();
-        user.addTrip(TRIP);
-        user.addFriend(REGISTERED_USER);
         user.addFriend(ANOTHER_USER);
-
-        loggedInUser = REGISTERED_USER;
+        loggedInUser = ANOTHER_USER;
 
         List<Trip> result = new TestableTripService().getTripsByUser(user);
 
