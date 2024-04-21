@@ -27,13 +27,10 @@ public class User {
     }
 
     public boolean hasAtLeastOneFriend(User loggedUser) {
-        boolean isFriend = false;
-        for (User friend : getFriends()) {
-            if (friend.equals(loggedUser)) {
-                isFriend = true;
-                break;
-            }
-        }
-        return isFriend;
+        return getFriends().stream().anyMatch(it -> isLoggedUser(loggedUser, it));
+    }
+
+    private boolean isLoggedUser(User loggedUser, User friend) {
+        return friend.equals(loggedUser);
     }
 }
